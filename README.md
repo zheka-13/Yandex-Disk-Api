@@ -5,18 +5,18 @@ usage:
 
 
 require_once "YaDisk.php";
-$token = "XXXXXXXXXXXXXXXXXXXXXXXX"; // need to obtain from user;
-$disk= new YaDisk($token);
+$token = "XXXXXXXXXXXXXXXXXXXXXXXX"; // need to obtain from user;<br>
+$disk= new YaDisk($token);<br><br>
 
-// get info about disk
-$res = $disk->getInfo();
+// get info about disk<br>
+$res = $disk->getInfo();<br><br>
 
-//upload file to folder, folder will be created if it doesn't exist 
-$res = $disk->uploadFile("file.txt", "new_folder");
+//upload file to folder, folder will be created if it doesn't exist<br> 
+$res = $disk->uploadFile("file.txt", "new_folder");<br><br>
 
-// just upload file to root folder 
-$res = $disk->uploadFile("file1.txt");
+// just upload file to root folder <br>
+$res = $disk->uploadFile("file1.txt");<br><br>
 
-// remove file 
+// remove file <br>
 $res = $disk->removeFile("oki/test.mp3");
 
