@@ -1,5 +1,5 @@
 # Yandex-Disk-Api
-Simple API Class for Yandex Disk. Info, Upload and Download just for now.
+Simple API Class for Yandex Disk. Info, Upload and Remove just for now.
 
 usage: 
 
