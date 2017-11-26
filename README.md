@@ -1,10 +1,10 @@
 # Yandex-Disk-Api
-Simple API Class for Yandex Disk. aInfo, Upload and Download just for now.
+Simple API Class for Yandex Disk. Info, Upload and Download just for now.
 
 usage: 
 
 
-require_once "YaDisk.php";
+require_once "YaDisk.php";<br>
 $token = "XXXXXXXXXXXXXXXXXXXXXXXX"; // need to obtain from user;<br>
 $disk= new YaDisk($token);<br><br>
 
