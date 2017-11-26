@@ -22,7 +22,15 @@ class YaDisk {
 		return $this->request("upload");
 	    }
 	    else{
-		if (isset($link['error']) && $link['error']=="iskPathDoesntExistsError"){
+		if (isset($link['error']) && $link['error']=="DiskPathDoesntExistsError"){
+		    $res = $this->request("mkdir");
+		    $answer = json_decode($res, true);
+		    if (isset($answer['created']) or isset($answer['href'])){
+			return $this->uploadFile($file, $path);
+		    }
+		    else {
+			return $res;
+		    }
 		}
 		return $res;
 	    }
@@ -39,6 +47,9 @@ class YaDisk {
 	switch ($type){
 	    case "info":
 		$data['url'] = "https://cloud-api.yandex.net/v1/disk/";
+		break;
+	    case "mkdir":
+		$data['url'] = "https://cloud-api.yandex.net/v1/disk/resources/?path=".urlencode("/".$this->upload_path);
 		break;
 	    case "get_upload_link":
 		$data['url'] = "https://cloud-api.yandex.net/v1/disk/resources/upload?path=".
@@ -62,6 +73,9 @@ class YaDisk {
 	    "Content-Type: application/json",
 	    "Authorization: OAuth ".$this->access_token
 	]);
+	if ($type=='mkdir'){
+	    curl_setopt($ch, CURLOPT_PUT, 1);
+	}
 	if ($type=='upload'){
 	    $fp = fopen($this->upload_file, "rb");
 	    curl_setopt($ch, CURLOPT_PUT, 1);
@@ -74,7 +88,13 @@ class YaDisk {
 	curl_close($ch);
 	if ($type=='upload'){
 	    fclose($fp);
-	}  
+	}
+	if (strstr($result, "201 Created")){
+	    $result = json_encode([
+		"created" => "ok",
+		"responce" => $result
+	    ]);
+	}
 	return $result;  
     }
 
