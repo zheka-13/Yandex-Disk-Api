@@ -7,6 +7,7 @@ class YaDisk {
 	$this->upload_file="";
 	$this->upload_link="";
 	$this->upload_path="";
+	$this->remove_file="";
     }
     public function getInfo(){
 	return $this->request("info");
@@ -42,6 +43,10 @@ class YaDisk {
 	    ]);
 	}
     }
+    public function removeFile($file){
+	$this->remove_file =  $file;
+	return $this->request("remove");
+    }
     private function getRequestData($type){
 	$data = [];
 	switch ($type){
@@ -50,6 +55,9 @@ class YaDisk {
 		break;
 	    case "mkdir":
 		$data['url'] = "https://cloud-api.yandex.net/v1/disk/resources/?path=".urlencode("/".$this->upload_path);
+		break;
+	    case "remove":
+		$data['url'] = "https://cloud-api.yandex.net/v1/disk/resources/?permanently=true&path=".urlencode("/".$this->remove_file);
 		break;
 	    case "get_upload_link":
 		$data['url'] = "https://cloud-api.yandex.net/v1/disk/resources/upload?path=".
@@ -74,7 +82,12 @@ class YaDisk {
 	    "Authorization: OAuth ".$this->access_token
 	]);
 	if ($type=='mkdir'){
+	    curl_setopt($ch, CURLOPT_HEADER, 1);
 	    curl_setopt($ch, CURLOPT_PUT, 1);
+	}
+	if ($type=='remove'){
+	    curl_setopt($ch, CURLOPT_HEADER, 1);
+	    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 	}
 	if ($type=='upload'){
 	    $fp = fopen($this->upload_file, "rb");
@@ -92,6 +105,18 @@ class YaDisk {
 	if (strstr($result, "201 Created")){
 	    $result = json_encode([
 		"created" => "ok",
+		"responce" => $result
+	    ]);
+	}
+	if (strstr($result, "201 CREATED")){
+	    $result = json_encode([
+		"created" => "ok",
+		"responce" => $result
+	    ]);
+	}
+	if (strstr($result, "204 NO CONTENT")){
+	    $result = json_encode([
+		"removed" => "ok",
 		"responce" => $result
 	    ]);
 	}
