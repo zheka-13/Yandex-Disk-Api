@@ -61,7 +61,7 @@ class YaDisk {
 		break;
 	    case "get_upload_link":
 		$data['url'] = "https://cloud-api.yandex.net/v1/disk/resources/upload?path=".
-		    urlencode("/".(strlen($this->upload_path)>0?$this->upload_path."/":"").$this->upload_file);
+		    urlencode("/".(strlen($this->upload_path)>0?$this->upload_path."/":"").basename($this->upload_file));
 		break;
 	    case "upload":
 		$data['url'] = $this->upload_link;
